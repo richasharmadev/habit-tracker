@@ -1,0 +1,115 @@
+
+<div class="dash__wrap">
+
+    <div class="user__strip">
+        <h1 class="">Habit Tracker</h1>
+        <div class="user__info">
+            <p class="">Welcome <%= user.name %></p>
+            <a href="/users/logout" class="">Logout</a>
+        </div>
+    </div>
+
+    <div class="">
+        <h2 class="hbt__vwtxt">Choose daily/weekly view below!</h2>
+        <form action="/user-view" method="POST" class="habitadd__form">
+            <% if(user.view === "daily"){ %>
+            <button type="submit" class="">Daily</button>
+            <button type="submit" class="">Weekly</button>
+            <% } else { %>
+            <button type="submit" class="">Daily</button>
+            <button type="submit" class="">Weekly</button>
+            <% } %>
+        </form>
+
+        <div class="dash__cont">
+
+            <form action="/dashboard" method="POST" class="addhabit__form">
+                <input type="text" name="content" placeholder="Enter text to add as a habit" required>
+                <button type="submit" class="">Add habit</button>
+            </form> 
+
+            <div class="habit__status">
+                <div class="done">
+                    <img class="status__img" src="../assets/images/done.svg" alt="">
+                    Done
+                </div>
+                <div class="notdone">
+                    <img class="status__img" src="../assets/images/undone.svg" alt="">
+                    Not done
+                </div>
+                <div class="none">
+                    <img class="status__img" src="../assets/images/unmarked.svg" alt="">
+                    Pending
+                </div>
+            </div>
+
+            <% if(user.view === "daily"){ %>
+            <div class="habit__list__daily">
+                <% habits.forEach(details => { let tzoffset = (new Date()).getTimezoneOffset() * 60000, found=false, status='';
+                    var today = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10);
+                    details.dates.find(function (item, index) {
+                        if(item.date === today)
+                        {
+                            found = true;
+                            status = item.complete;
+                        }
+                    });
+                %>
+                <div class="habit__item__daily">
+                    <div class="habit_item"><%= details.content %></div>
+                    <a href="status-update/?id=<%= details._id %>&date=<%= today %>" class="status">
+                        <% if(found && status==='yes'){ %>
+                            <img class="status__img" src="../assets/images/done.svg" alt="">
+                        <% } else if(found && status==='no'){ %>
+                            <img class="status__img" src="../assets/images/undone.svg" alt="">
+                        <% } else { %>
+                            <img class="status__img" src="../assets/images/unmarked.svg" alt="">
+                        <% } %>
+                    </a>
+                    <a href="/remove/?id=<%= details._id %>" class="remove">
+                        <img class="status__img" src="../assets/images/delete.svg" alt="">
+                    </a>
+                </div>
+                <% }) %>
+            </div>
+            <% } else { %>
+            <div class="habit__list__weekly">
+                <% habits.forEach(details => { %>
+                <div class="habit__item__weekly">
+                    <div class="habit__item"><%= details.content %></div>
+                    <div class="wview__wrap">
+                        <% days.forEach(day => { let found = false, status = '';
+                        details.dates.find(function (item, index) {
+                            if(item.date === day.date)
+                            {
+                                found = true;
+                                status = item.complete;
+                            }
+                        });
+                        %>
+                        <div class="wview">
+                            <span>
+                                <%= day.day + ", " + day.date.slice(-2) %>
+                            </span>
+                            <a href="status-update/?id=<%= details._id %>&date=<%= day.date %>">
+                                <% if(found && status==='yes'){ %>
+                                    <img class="status__img" src="../assets/images/done.svg" alt="">
+                                <% } else if(found && status==='no'){ %>
+                                    <img class="status__img" src="../assets/images/undone.svg" alt="">
+                                <% } else { %>
+                                    <img class="status__img" src="../assets/images/unmarked.svg" alt="">
+                                <% } %>
+                            </a>
+                        </div>
+                        <% }) %>
+                    </div>
+                    <a href="/remove/?id=<%= details._id %>" class="remove">
+                        <img class="status__img" src="../assets/images/delete.svg" alt="">
+                    </a>
+                </div>
+                <% }) %>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>

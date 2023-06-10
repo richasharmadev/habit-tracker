@@ -1,0 +1,16 @@
+<!-- Register View -->
+<div class="main__wrap">
+  <div class="main__div">
+    <h1>Habit Tracker</h1>
+    <img src="/assets/images/calender.svg" alt="calender image"/>
+    <h3 class="">Register</h3>
+    <form class="reg__form" action="/users/register" method="POST">
+      <input type="name" id="name" required name="name" class="form-control" placeholder="Enter Name"
+        value="<%= typeof name != 'undefined' ? name : '' %>" />
+      <input type="email" id="email" name="email" required class="form-control" placeholder="Enter Email"
+        value="<%= typeof email != 'undefined' ? email : '' %>" />
+      <button type="submit"> Register </button>
+    </form>
+    <span class="reg__logbtn">Returning User? <a href="/users/login">Login</a></span>
+  </div>
+</div>
